@@ -37,7 +37,7 @@ jobs:
 
       # Step 5: Run Tests with Coverage
       - name: Run Tests with Coverage
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew app:jacocoTestReport
 
       # Step 6: Run SonarCloud Analysis with Coverage Report
       - name: SonarCloud Scan
