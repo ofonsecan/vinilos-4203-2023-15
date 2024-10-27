@@ -5,7 +5,6 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("plugin.serialization")
     id("com.google.devtools.ksp")
-    id("jacoco") // Apply JaCoCo plugin here
 }
 
 android {
@@ -18,6 +17,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -33,7 +33,6 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -41,14 +40,12 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
     buildFeatures {
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -56,35 +53,13 @@ android {
             merges += "META-INF/LICENSE-notice.md"
         }
     }
-
     testOptions {
-        unitTests.isIncludeAndroidResources = true // Enable Android resources in unit tests
+        packaging {
+            jniLibs {
+                useLegacyPackaging = true
+            }
+        }
     }
-}
-
-jacoco {
-    toolVersion = "0.8.7"
-}
-
-tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest") // Ensure this matches your test task
-
-    reports {
-        xml.required.set(true)       // XML report for SonarCloud
-        html.required.set(false)     // Optional: Set to true if you want an HTML report
-        csv.required.set(false)
-    }
-
-    sourceDirectories.setFrom(files("src/main/java"))
-    classDirectories.setFrom(
-        fileTree(
-            mapOf(
-                "dir" to "build/intermediates/classes/debug",
-                "excludes" to listOf("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
-            )
-        )
-    )
-    executionData.setFrom(fileTree(mapOf("dir" to "build", "includes" to listOf("**/jacoco/testDebugUnitTest.exec"))))
 }
 
 kapt {
@@ -92,6 +67,7 @@ kapt {
 }
 
 dependencies {
+
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -129,4 +105,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     testImplementation("io.mockk:mockk:1.13.8")
     androidTestImplementation("io.mockk:mockk-android:1.13.8")
+
 }
