@@ -1,4 +1,4 @@
-name: Build and Analyze with SonarCloud
+name: Build and SonarCloud Analysis
 on:
   push:
     branches:
@@ -8,40 +8,40 @@ on:
 
 jobs:
   sonarcloud:
-    name: SonarCloud Analysis
+    name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the code
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+          fetch-depth: 0  # Full clone for better SonarCloud analysis
 
-      # Step 2: Set up JDK 11 (required for most Android builds)
-      - name: Set up JDK 11
+      # Step 2: Set up JDK 11 (required for most Android/Kotlin builds)
+      - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
           java-version: '11'
 
-      # Step 3: Set up the Android SDK
-      - name: Set up Android SDK
+      # Step 3: Set up Android SDK
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v2
         with:
-          api-level: 33       # Set the API level needed for your project
+          api-level: 33         # Set API level as per your project requirements
           target: default
-          channel: 3          # Channel 3 is for the "stable" version of SDK components
+          channel: 3            # Stable channel for SDK components
 
-      # Step 4: Give execute permission to gradlew
-      - name: Grant execute permission for Gradle
+      # Step 4: Grant execute permission to gradlew
+      - name: Make gradlew executable
         run: chmod +x gradlew
 
-      # Step 5: Build the project
-      - name: Build the Project
+      # Step 5: Install dependencies and build the project
+      - name: Build the project
         run: ./gradlew build
 
       # Step 6: Run SonarCloud Analysis
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for PR decoration, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Your SonarCloud token
