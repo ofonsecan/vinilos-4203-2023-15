@@ -7,10 +7,15 @@ plugins {
     id("org.sonarqube") version "5.1.0.4882" apply false
 }
 
-sonarqube {
-    properties {
-        property("sonar.projectKey", "ofonsecan_vinilos-4203-2023-15")
-        property("sonar.organization", "ofonsecan")
-        property("sonar.host.url", "https://sonarcloud.io")
+// Apply the SonarQube plugin in the app module where it is needed
+subprojects {
+    apply(plugin = "org.sonarqube")
+
+    sonarqube {
+        properties {
+            property("sonar.projectKey", "ofonsecan_vinilos-4203-2023-15")
+            property("sonar.organization", "ofonsecan")
+            property("sonar.host.url", "https://sonarcloud.io")
+        }
     }
 }
