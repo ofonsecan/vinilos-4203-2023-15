@@ -16,26 +16,26 @@ jobs:
         with:
           fetch-depth: 0  # Full clone for better SonarCloud analysis
 
-      # Step 2: Set up JDK 11 (required for most Android/Kotlin builds)
+      # Step 2: Set up JDK 17 (required by the Android Gradle Plugin)
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       # Step 3: Set up Android SDK
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
         with:
-          api-level: 33         # Set API level as per your project requirements
+          api-level: 33         # Replace with the API level your project targets
           target: default
           channel: 3            # Stable channel for SDK components
 
-      # Step 4: Grant execute permission to gradlew
+      # Step 4: Make gradlew executable
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      # Step 5: Install dependencies and build the project
+      # Step 5: Build the project
       - name: Build the project
         run: ./gradlew build
 
@@ -43,5 +43,5 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for PR decoration, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Your SonarCloud token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
