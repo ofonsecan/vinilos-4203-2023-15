@@ -1,30 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "8.1.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.10" apply false
-    id("com.google.dagger.hilt.android") version "2.48.1" apply false
-    kotlin("plugin.serialization") version "1.8.10" apply false
-    id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply false
-    id("jacoco")
+    id("com.android.application")
+    id("kotlin-android")
+    id("jacoco") // Apply the JaCoCo plugin here
+    id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization")
 }
 
 jacoco {
-    toolVersion = "0.8.7" // Use the latest stable version
-}
-
-tasks.withType<Test> {
-    extensions.configure(JacocoTaskExtension::class) {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
-    }
+    toolVersion = "0.8.7" // Latest version at this time
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest") // Run tests in debug mode
+    dependsOn("testDebugUnitTest") // Ensure this matches your test task
 
     reports {
-        xml.required.set(true)       // XML report required by SonarCloud
-        html.required.set(false)     // Optional HTML report
+        xml.required.set(true)       // XML report for SonarCloud
+        html.required.set(false)
         csv.required.set(false)
     }
 
