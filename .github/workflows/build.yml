@@ -35,13 +35,19 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      # Step 5: Build the project
-      - name: Build the project
-        run: ./gradlew build
+      # Step 5: Run Tests with Coverage
+      - name: Run Tests with Coverage
+        run: ./gradlew jacocoTestReport
 
-      # Step 6: Run SonarCloud Analysis
+      # Step 6: Run SonarCloud Analysis with Coverage Report
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=ofonsecan_vinilos-4203-2023-15
+            -Dsonar.organization=ofonsecan
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
